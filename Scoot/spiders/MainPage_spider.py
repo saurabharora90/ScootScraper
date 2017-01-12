@@ -37,10 +37,18 @@ class MainPage(scrapy.Spider):
         currentFlightDepart = response.xpath(Paths.pathForDepartFlights).xpath('div[@class="tab active"]')
         departDay = currentFlightDepart.xpath('a/span/text()').extract()[0].strip()
         departCost = currentFlightDepart.xpath('a/span/strong/text()').extract()[0].strip()
-        print "Flight {2} on {0} at {3} is {1} ".format(departDay, departCost, response.xpath('/html/body/div[1]/main/form[1]/section[1]/div[1]/div/div[1]/h2/text()').extract()[0].strip(), response.xpath(Paths.timingForDepartFlight).extract()[0].strip())
+        departTiming = response.xpath(Paths.timingForDepartFlight).extract();
+        if not departTiming:
+            print "Flight {2} on {0} is {1} ".format(departDay, departCost, response.xpath(Paths.routeForDepartFlight).extract()[0].strip())
+        else:
+            print "Flight {2} on {0} at {3} is {1} ".format(departDay, departCost, response.xpath(Paths.routeForDepartFlight).extract()[0].strip(), departTiming[0].strip())
 
         currentFlightReturn = response.xpath(Paths.pathForReturnFlights).xpath('div[@class="tab active"]')
         returnDay = currentFlightReturn.xpath('a/span/text()').extract()[0].strip()
         returnCost = currentFlightReturn.xpath('a/span/strong/text()').extract()[0].strip()
-        print "Flight {2} on {0} at {3} is {1} ".format(returnDay, returnCost, response.xpath('/html/body/div[1]/main/form[1]/section[2]/div[1]/div/div[1]/h2/text()').extract()[0].strip(), response.xpath(Paths.timingForReturnFlight).extract()[0].strip())
+        returnTiming = response.xpath(Paths.timingForDepartFlight).extract();
+        if not returnTiming:
+            print "Flight {2} on {0} is {1} ".format(returnDay, returnCost, response.xpath(Paths.routeForReturnFlight).extract()[0].strip())
+        else:
+            print "Flight {2} on {0} at {3} is {1} ".format(returnDay, returnCost, response.xpath(Paths.routeForReturnFlight).extract()[0].strip(), returnTiming[0].strip())
         #scrapy.utils.response.open_in_browser(response)
