@@ -26,7 +26,7 @@ class MainPage(scrapy.Spider):
         'revAvailabilitySearch.SearchInfo.SearchStations[0].DepartureDate':	'04/13/2017',
         'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureStationCode' : self.destination,
         'revAvailabilitySearch.SearchInfo.SearchStations[1].ArrivalStationCode' : self.departure,
-        'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureDate' : '04/16/2017'}
+        'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureDate' : '04/17/2017'}
         yield FormRequest.from_response(response,
                                 formxpath='//*[@id="searhflightform_return"]',
                                 formdata=formdata,
@@ -46,7 +46,7 @@ class MainPage(scrapy.Spider):
         currentFlightReturn = response.xpath(Paths.pathForReturnFlights).xpath('div[@class="tab active"]')
         returnDay = currentFlightReturn.xpath('a/span/text()').extract()[0].strip()
         returnCost = currentFlightReturn.xpath('a/span/strong/text()').extract()[0].strip()
-        returnTiming = response.xpath(Paths.timingForDepartFlight).extract();
+        returnTiming = response.xpath(Paths.timingForReturnFlight).extract();
         if not returnTiming:
             print "Flight {2} on {0} is {1} ".format(returnDay, returnCost, response.xpath(Paths.routeForReturnFlight).extract()[0].strip())
         else:
