@@ -2,15 +2,16 @@ import scrapy
 from scrapy import FormRequest
 
 class MainPage(scrapy.Spider):
-    name = "landingPage"
+    name = "price"
     allowed_domains = ["flyscoot.com"]
     start_urls = [
             'http://www.flyscoot.com/en/',
         ]
 
-    def __init__(self, to, *args, **kwargs):
+    def __init__(self, t, f = 'SIN', *args, **kwargs):
         super(MainPage, self).__init__(*args, **kwargs)
-        self.destination = to
+        self.departure = f
+        self.destination = t
 
     def parse(self, response):
         formdata = {'revAvailabilitySearch.SearchInfo.AdultCount' : '1',
@@ -19,11 +20,11 @@ class MainPage(scrapy.Spider):
         'revAvailabilitySearch.SearchInfo.Direction' : 'Return',
         'revAvailabilitySearch.SearchInfo.PromoCode' : '',
         'revAvailabilitySearch.SearchInfo.SalesCode' : '',
-        'revAvailabilitySearch.SearchInfo.SearchStations[0].DepartureStationCode' : 'SIN',
+        'revAvailabilitySearch.SearchInfo.SearchStations[0].DepartureStationCode' : self.departure,
         'revAvailabilitySearch.SearchInfo.SearchStations[0].ArrivalStationCode' : self.destination,
         'revAvailabilitySearch.SearchInfo.SearchStations[0].DepartureDate':	'01/27/2017',
         'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureStationCode' : self.destination,
-        'revAvailabilitySearch.SearchInfo.SearchStations[1].ArrivalStationCode' : 'SIN',
+        'revAvailabilitySearch.SearchInfo.SearchStations[1].ArrivalStationCode' : self.departure,
         'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureDate' : '01/31/2017'}
         yield FormRequest.from_response(response,
                                 formxpath='//*[@id="searhflightform_return"]',
