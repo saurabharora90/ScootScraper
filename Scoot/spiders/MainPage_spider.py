@@ -9,10 +9,12 @@ class MainPage(scrapy.Spider):
             'http://www.flyscoot.com/en/',
         ]
 
-    def __init__(self, t, f = 'SIN', *args, **kwargs):
+    def __init__(self, t, f = 'SIN', dep = '04/13/2017', ret = '04/17/2017', *args, **kwargs):
         super(MainPage, self).__init__(*args, **kwargs)
         self.departure = f
         self.destination = t
+        self.dep = dep
+        self.ret = ret
 
     def parse(self, response):
         formdata = {'revAvailabilitySearch.SearchInfo.AdultCount' : '1',
@@ -23,10 +25,10 @@ class MainPage(scrapy.Spider):
         'revAvailabilitySearch.SearchInfo.SalesCode' : '',
         'revAvailabilitySearch.SearchInfo.SearchStations[0].DepartureStationCode' : self.departure,
         'revAvailabilitySearch.SearchInfo.SearchStations[0].ArrivalStationCode' : self.destination,
-        'revAvailabilitySearch.SearchInfo.SearchStations[0].DepartureDate':	'04/13/2017',
+        'revAvailabilitySearch.SearchInfo.SearchStations[0].DepartureDate':	self.dep,
         'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureStationCode' : self.destination,
         'revAvailabilitySearch.SearchInfo.SearchStations[1].ArrivalStationCode' : self.departure,
-        'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureDate' : '04/17/2017'}
+        'revAvailabilitySearch.SearchInfo.SearchStations[1].DepartureDate' : self.ret}
         yield FormRequest.from_response(response,
                                 formxpath='//*[@id="searhflightform_return"]',
                                 formdata=formdata,
